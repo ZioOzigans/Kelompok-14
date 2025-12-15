@@ -1,0 +1,442 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+// Fungsi-fungsi untuk kalkulator rangkaian
+void hukumOhm();
+void dayaListrik();
+void resistorSeri();
+void resistorParalel();
+
+// Fungsi-fungsi untuk konversi sistem bilangan
+void desimalKeBasisLain();
+void binerKeDesimal();
+void oktalKeDesimal();
+void heksadesimalKeDesimal();
+
+// Fungsi bantu
+void clearBuffer();
+void pressEnterToContinue();
+int isValidHex(char c);
+int hexToDecimal(char c);
+char toUpper(char c);
+
+int main() {
+    int pilihan;
+    
+    do {
+        system("cls"); // Untuk Windows, gunakan "clear" di Linux/Mac
+        printf("=================================================\n");
+        printf("| TOOLKIT LENGKAP ASISTEN LABORATORIUM ELEKTRO |\n");
+        printf("=================================================\n");
+        printf("--- Verifikasi Rangkaian Elektrik ---\n");
+        printf("1. Kalkulator Hukum Ohm (V = I * R)\n");
+        printf("2. Kalkulator Daya Listrik (P = V * I)\n");
+        printf("3. Kalkulator Resistor Seri\n");
+        printf("4. Kalkulator Resistor Paralel\n");
+        printf("--- Utilitas Sistem Digital ---\n");
+        printf("5. Desimal -> Biner / Oktal / Heksadesimal\n");
+        printf("6. Biner -> Desimal\n");
+        printf("7. Oktal -> Desimal\n");
+        printf("8. Heksadesimal -> Desimal\n");
+        printf("9. Keluar\n");
+        printf("-------------------------------------------------\n");
+        printf("Masukkan pilihan Anda (1-9): ");
+        scanf("%d", &pilihan);
+        clearBuffer();
+        
+        switch(pilihan) {
+            case 1:
+                hukumOhm();
+                break;
+            case 2:
+                dayaListrik();
+                break;
+            case 3:
+                resistorSeri();
+                break;
+            case 4:
+                resistorParalel();
+                break;
+            case 5:
+                desimalKeBasisLain();
+                break;
+            case 6:
+                binerKeDesimal();
+                break;
+            case 7:
+                oktalKeDesimal();
+                break;
+            case 8:
+                heksadesimalKeDesimal();
+                break;
+            case 9:
+                printf("\nTerima kasih telah menggunakan toolkit ini!\n");
+                break;
+            default:
+                printf("\nPilihan tidak valid! Silakan coba lagi.\n");
+                pressEnterToContinue();
+        }
+    } while(pilihan != 9);
+    
+    return 0;
+}
+
+void hukumOhm() {
+    system("cls");
+    printf("--- Kalkulator Hukum Ohm (V = I * R) ---\n\n");
+    
+    char pilihan;
+    printf("Pilih besaran yang akan dihitung:\n");
+    printf("V - Tegangan (Volt)\n");
+    printf("I - Arus (Ampere)\n");
+    printf("R - Hambatan (Ohm)\n");
+    printf("Masukkan pilihan (V/I/R): ");
+    scanf(" %c", &pilihan);
+    clearBuffer();
+    
+    // Manual uppercase conversion
+    if(pilihan >= 'a' && pilihan <= 'z') {
+        pilihan = pilihan - 'a' + 'A';
+    }
+    
+    if(pilihan == 'V') {
+        double I, R;
+        printf("\nMasukkan nilai Arus (Ampere): ");
+        scanf("%lf", &I);
+        printf("Masukkan nilai Hambatan (Ohm): ");
+        scanf("%lf", &R);
+        clearBuffer();
+        
+        double V = I * R;
+        printf("\nHasil Perhitungan:\n");
+        printf("V = I * R = %.2lf A * %.2lf Ohm = %.2lf Volt\n", I, R, V);
+    }
+    else if(pilihan == 'I') {
+        double V, R;
+        printf("\nMasukkan nilai Tegangan (Volt): ");
+        scanf("%lf", &V);
+        printf("Masukkan nilai Hambatan (Ohm): ");
+        scanf("%lf", &R);
+        clearBuffer();
+        
+        double I = V / R;
+        printf("\nHasil Perhitungan:\n");
+        printf("I = V / R = %.2lf V / %.2lf Ohm = %.2lf Ampere\n", V, R, I);
+    }
+    else if(pilihan == 'R') {
+        double V, I;
+        printf("\nMasukkan nilai Tegangan (Volt): ");
+        scanf("%lf", &V);
+        printf("Masukkan nilai Arus (Ampere): ");
+        scanf("%lf", &I);
+        clearBuffer();
+        
+        double R = V / I;
+        printf("\nHasil Perhitungan:\n");
+        printf("R = V / I = %.2lf V / %.2lf A = %.2lf Ohm\n", V, I, R);
+    }
+    else {
+        printf("\nPilihan tidak valid!\n");
+    }
+    
+    pressEnterToContinue();
+}
+
+void dayaListrik() {
+    system("cls");
+    printf("--- Kalkulator Daya Listrik (P = V * I) ---\n\n");
+    
+    double V, I;
+    printf("Masukkan nilai Tegangan (Volt): ");
+    scanf("%lf", &V);
+    printf("Masukkan nilai Arus (Ampere): ");
+    scanf("%lf", &I);
+    clearBuffer();
+    
+    double P = V * I;
+    printf("\nHasil Perhitungan:\n");
+    printf("P = V * I = %.2lf V * %.2lf A = %.2lf Watt\n", V, I, P);
+    
+    pressEnterToContinue();
+}
+
+void resistorSeri() {
+    system("cls");
+    printf("--- Kalkulator Resistor Seri ---\n\n");
+    
+    int n;
+    printf("Masukkan jumlah resistor: ");
+    scanf("%d", &n);
+    clearBuffer();
+    
+    if(n <= 0) {
+        printf("Jumlah resistor harus lebih dari 0!\n");
+        pressEnterToContinue();
+        return;
+    }
+    
+    double total = 0;
+    for(int i = 0; i < n; i++) {
+        double R;
+        printf("Masukkan nilai Resistor %d (Ohm): ", i+1);
+        scanf("%lf", &R);
+        total += R;
+    }
+    clearBuffer();
+    
+    printf("\nTotal Hambatan Seri adalah: %.2lf Ohm\n", total);
+    
+    pressEnterToContinue();
+}
+
+void resistorParalel() {
+    system("cls");
+    printf("--- Kalkulator Resistor Paralel ---\n\n");
+    
+    int n;
+    printf("Masukkan jumlah resistor: ");
+    scanf("%d", &n);
+    clearBuffer();
+    
+    if(n <= 0) {
+        printf("Jumlah resistor harus lebih dari 0!\n");
+        pressEnterToContinue();
+        return;
+    }
+    
+    double total_kebalikan = 0;
+    for(int i = 0; i < n; i++) {
+        double R;
+        printf("Masukkan nilai Resistor %d (Ohm): ", i+1);
+        scanf("%lf", &R);
+        
+        if(R == 0) {
+            printf("Resistor tidak boleh bernilai 0 Ohm!\n");
+            pressEnterToContinue();
+            return;
+        }
+        
+        total_kebalikan += 1.0 / R;
+    }
+    clearBuffer();
+    
+    double R_total = 1.0 / total_kebalikan;
+    printf("\nTotal Hambatan Paralel adalah: %.2lf Ohm\n", R_total);
+    
+    pressEnterToContinue();
+}
+
+void desimalKeBasisLain() {
+    system("cls");
+    printf("--- Konversi dari Desimal ---\n\n");
+    
+    long long decimal;
+    printf("Masukkan bilangan desimal: ");
+    scanf("%lld", &decimal);
+    clearBuffer();
+    
+    // Konversi ke Biner
+    printf("\nHasil Konversi:\n");
+    printf("- Biner        : ");
+    
+    if(decimal == 0) {
+        printf("0");
+    }
+    else {
+        // Simpan digit biner dalam array
+        int bin[64], i = 0;
+        long long temp = decimal;
+        
+        while(temp > 0) {
+            bin[i++] = temp % 2;
+            temp /= 2;
+        }
+        
+        // Tampilkan dari belakang
+        for(int j = i-1; j >= 0; j--) {
+            printf("%d", bin[j]);
+        }
+    }
+    
+    // Konversi ke Oktal
+    printf("\n- Oktal        : ");
+    
+    if(decimal == 0) {
+        printf("0");
+    }
+    else {
+        // Simpan digit oktal dalam array
+        int oct[64], i = 0;
+        long long temp = decimal;
+        
+        while(temp > 0) {
+            oct[i++] = temp % 8;
+            temp /= 8;
+        }
+        
+        // Tampilkan dari belakang
+        for(int j = i-1; j >= 0; j--) {
+            printf("%d", oct[j]);
+        }
+    }
+    
+    // Konversi ke Heksadesimal
+    printf("\n- Heksadesimal : ");
+    
+    if(decimal == 0) {
+        printf("0");
+    }
+    else {
+        // Simpan digit heksa dalam array
+        char hex[64];
+        int i = 0;
+        long long temp = decimal;
+        
+        while(temp > 0) {
+            int remainder = temp % 16;
+            if(remainder < 10) {
+                hex[i++] = remainder + '0';
+            }
+            else {
+                hex[i++] = remainder - 10 + 'A';
+            }
+            temp /= 16;
+        }
+        
+        // Tampilkan dari belakang
+        for(int j = i-1; j >= 0; j--) {
+            printf("%c", hex[j]);
+        }
+    }
+    
+    printf("\n");
+    pressEnterToContinue();
+}
+
+void binerKeDesimal() {
+    system("cls");
+    printf("--- Konversi Biner ke Desimal ---\n\n");
+    
+    char biner[65];
+    printf("Masukkan bilangan biner: ");
+    scanf("%s", biner);
+    clearBuffer();
+    
+    // Validasi input biner
+    for(int i = 0; biner[i] != '\0'; i++) {
+        if(biner[i] != '0' && biner[i] != '1') {
+            printf("Input bukan bilangan biner yang valid!\n");
+            pressEnterToContinue();
+            return;
+        }
+    }
+    
+    long long decimal = 0;
+    int panjang = strlen(biner);
+    
+    for(int i = 0; i < panjang; i++) {
+        if(biner[panjang-1-i] == '1') {
+            decimal += (long long)pow(2, i);
+        }
+    }
+    
+    printf("Hasil Desimal: %lld\n", decimal);
+    pressEnterToContinue();
+}
+
+void oktalKeDesimal() {
+    system("cls");
+    printf("--- Konversi Oktal ke Desimal ---\n\n");
+    
+    char oktal[65];
+    printf("Masukkan bilangan oktal: ");
+    scanf("%s", oktal);
+    clearBuffer();
+    
+    // Validasi input oktal
+    for(int i = 0; oktal[i] != '\0'; i++) {
+        if(oktal[i] < '0' || oktal[i] > '7') {
+            printf("Input bukan bilangan oktal yang valid!\n");
+            pressEnterToContinue();
+            return;
+        }
+    }
+    
+    long long decimal = 0;
+    int panjang = strlen(oktal);
+    
+    for(int i = 0; i < panjang; i++) {
+        int digit = oktal[panjang-1-i] - '0';
+        decimal += digit * (long long)pow(8, i);
+    }
+    
+    printf("Hasil Desimal: %lld\n", decimal);
+    pressEnterToContinue();
+}
+
+void heksadesimalKeDesimal() {
+    system("cls");
+    printf("--- Konversi Heksadesimal ke Desimal ---\n\n");
+    
+    char heksa[65];
+    printf("Masukkan bilangan heksadesimal: ");
+    scanf("%s", heksa);
+    clearBuffer();
+    
+    // Konversi ke uppercase untuk memudahkan
+    for(int i = 0; heksa[i] != '\0'; i++) {
+        heksa[i] = toUpper(heksa[i]);
+    }
+    
+    // Validasi input heksadesimal
+    for(int i = 0; heksa[i] != '\0'; i++) {
+        if(!isValidHex(heksa[i])) {
+            printf("Input bukan bilangan heksadesimal yang valid!\n");
+            pressEnterToContinue();
+            return;
+        }
+    }
+    
+    long long decimal = 0;
+    int panjang = strlen(heksa);
+    
+    for(int i = 0; i < panjang; i++) {
+        int digit = hexToDecimal(heksa[panjang-1-i]);
+        decimal += digit * (long long)pow(16, i);
+    }
+    
+    printf("Hasil Desimal: %lld\n", decimal);
+    pressEnterToContinue();
+}
+
+// Fungsi bantu
+void clearBuffer() {
+    while(getchar() != '\n');
+}
+
+void pressEnterToContinue() {
+    printf("\nTekan Enter untuk kembali ke menu utama...");
+    clearBuffer();
+}
+
+int isValidHex(char c) {
+    return (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F');
+}
+
+int hexToDecimal(char c) {
+    if(c >= '0' && c <= '9') {
+        return c - '0';
+    }
+    else {
+        return c - 'A' + 10;
+    }
+}
+
+char toUpper(char c) {
+    if(c >= 'a' && c <= 'z') {
+        return c - 'a' + 'A';
+    }
+    return c;
+}
